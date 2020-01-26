@@ -1,0 +1,18 @@
+# common
+numpy
+pandas
+sklearn
+scipy
+
+#Visualization
+matplotlib
+Seaborn
+
+#Dataset
+python-mnist
+
+#OpenCV
+opencv-python
+
+#Other
+imageio
