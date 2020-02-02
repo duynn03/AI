@@ -4,7 +4,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 
-
+# TODO
 np.random.seed(4)
 
 # data: phân phối chuẩn có tâm ở [[-1, -1], [1, -1], [0, 1]].
