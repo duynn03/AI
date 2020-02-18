@@ -9,7 +9,7 @@ from matplotlib.animation import FuncAnimation
 
 np.random.seed(2)
 
-# generate data
+# generate datas
 # tạo hai nhóm dữ liệu, mỗi nhóm có 10 điểm, mỗi điểm dữ liệu có hai chiều (x,y)
 means = [[2, 2], [4, 2]]
 cov = [[.3, .2], [.2, .3]]
@@ -32,7 +32,7 @@ def perceptron(X, y, w_init):
     N = X.shape[1]
     mis_points = []
     while True:
-        # mix data
+        # mix datas
         mix_id = np.random.permutation(N)
         for i in range(N):
             xi = X[:, mix_id[i]].reshape(d, 1)

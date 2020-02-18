@@ -7,7 +7,7 @@ import numpy as np
 # https://machinelearningcoban.com/2016/12/28/linearregression/
 # (cân nặng) = w_1*(chiều cao) + w_0
 
-# setup 13 data
+# setup 13 datas
 # height (cm)
 X = np.array([[147, 150, 153, 158, 163, 165, 168, 170, 173, 175, 178, 180, 183]]).T
 
@@ -37,7 +37,7 @@ x0 = np.linspace(145, 185, 2)
 y0 = w_0 + w_1 * x0
 
 # Drawing the fitting line
-plt.plot(X.T, y.T, 'ro')  # data
+plt.plot(X.T, y.T, 'ro')  # datas
 plt.plot(x0, y0)  # the fitting line
 plt.axis([140, 190, 45, 75])
 plt.xlabel('Height (cm)')

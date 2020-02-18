@@ -8,7 +8,7 @@ np.random.seed(0)
 # https://towardsdatascience.com/forward-propagation-in-neural-networks-simplified-math-and-code-version-bbcfef6f9250
 # Giống basic nhưng thay vì quản lý các parameter w1, w2…w6, a1, a2, h1, h2 thì sẽ cho thành các matrix để tiện tính toán
 
-# X: là vector của input data
+# X: là vector của input datas
 
 # W1: là vector của matrix W của layer 1
 # W2: là vector của matrix W của layer 2
@@ -22,15 +22,15 @@ np.random.seed(0)
 # H1: là vector của matrix sau activation của layer 1
 # H2: là vector của matrix sau activation của layer 2
 
-# generate data
+# generate datas
 data, labels = make_moons(n_samples=200, noise=0.04, random_state=0)
 print(data.shape, labels.shape)
 color_map = matplotlib.colors.LinearSegmentedColormap.from_list("", ["red", "green"])
 plt.scatter(data[:, 0], data[:, 1], c=labels, cmap=color_map)
 plt.show()
 
-# Splitting the data into training and testing data
-# 150 data for training, 50 data for testing
+# Splitting the datas into training and testing datas
+# 150 datas for training, 50 datas for testing
 X_train, X_val, Y_train, Y_val = train_test_split(data, labels, stratify=labels, random_state=0)
 print(X_train.shape, X_val.shape)
 

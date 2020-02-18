@@ -24,7 +24,7 @@ print('Centers found by scikit-learn:')
 print(kmeans.cluster_centers_)
 pred_label = kmeans.predict(X)
 
-# display data
+# display datas
 #mỗi cluster tương ứng với một màu
 def kmeans_display(X, label):
     K = np.amax(label) + 1

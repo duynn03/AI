@@ -52,7 +52,7 @@ def vectorize_img(filename):
     rgb = imageio.imread(filename)
     # convert to gray scale
     gray = rgb2gray(rgb)
-    # vectorization each row is a data point
+    # vectorization each row is a datas point
     im_vec = gray.reshape(1, D)
     return im_vec
 
@@ -113,7 +113,7 @@ X_test = feature_extraction(X_test_full)
 X_test_full = None
 
 # thực hiện thuật toán LogisticRegression
-# dự đoán output của test data và đánh giá kết quả
+# dự đoán output của test datas và đánh giá kết quả
 logreg = linear_model.LogisticRegression(C=1e5)  # just a big number
 logreg.fit(X_train, y_train)
 

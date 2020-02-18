@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 N = 100 # number of points per class
 d0 = 2 # dimensionality
 C = 3 # number of classes
-X = np.zeros((d0, N*C)) # data matrix (each row = single example)
+X = np.zeros((d0, N*C)) # datas matrix (each row = single example)
 y = np.zeros(N*C, dtype='uint8') # class labels
 
 for j in range(C):
@@ -21,7 +21,7 @@ for j in range(C):
   X[:,ix] = np.c_[r*np.sin(t), r*np.cos(t)].T
   y[ix] = j
 
-# lets visualize the data:
+# lets visualize the datas:
 plt.plot(X[0, :N], X[1, :N], 'bs', markersize = 7);
 plt.plot(X[0, N:2*N], X[1, N:2*N], 'ro', markersize = 7);
 plt.plot(X[0, 2*N:], X[1, 2*N:], 'g^', markersize = 7);

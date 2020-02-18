@@ -186,8 +186,8 @@ for line in lines:
 # Then, the output should be:
 #  again and hello makes perfect practice world
 # Hints:
-# We use set container to remove duplicated data automatically and then use sorted() to sort the
-# data.
+# We use set container to remove duplicated datas automatically and then use sorted() to sort the
+# datas.
 words = input("Enter words which you want to sort: ").split(" ")
 print(sorted(set(words)))
 

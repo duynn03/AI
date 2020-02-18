@@ -37,7 +37,7 @@ plt.show()
 cmap = plt.cm.jet
 norm = plt.Normalize(vmin=A.min(), vmax=A.max())
 
-# map the normalized data to colors
+# map the normalized datas to colors
 # image is now RGBA (512x512x4)
 image = cmap(norm(A))
 

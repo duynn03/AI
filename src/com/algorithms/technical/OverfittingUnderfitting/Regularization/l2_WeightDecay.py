@@ -8,7 +8,7 @@ from scipy import sparse
 # https://machinelearningcoban.com/2017/03/04/overfitting/#vi-du-ve-weight-decay-voi-mlp
 np.random.seed(4)
 
-# data: phân phối chuẩn có tâm ở [[-1, -1], [1, -1], [0, 1]].
+# datas: phân phối chuẩn có tâm ở [[-1, -1], [1, -1], [0, 1]].
 means = [[-1, -1], [1, -1], [0, 1]]
 cov = [[1, 0], [0, 1]]
 N = 20
@@ -76,7 +76,7 @@ def mynet(lam):
     W2 = 0.01 * np.random.randn(d1, d2)
     b2 = np.zeros((d2, 1))
 
-    # X = X.T # each column of X is a data point
+    # X = X.T # each column of X is a datas point
     Y = convert_labels(y, C)
     N = X.shape[1]
     eta = 1  # learning rate

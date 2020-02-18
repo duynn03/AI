@@ -14,6 +14,18 @@ python-mnist
 #OpenCV
 opencv-python
 
+#Image
+scikit-image
+imutils
+
+# parse HTML
+bs4
+lxml
+requests
+
+# Zernike Descriptor
+mahotas
+
 #Other
 imageio
 IPython

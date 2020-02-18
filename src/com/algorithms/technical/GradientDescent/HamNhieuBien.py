@@ -30,7 +30,7 @@ y0 = w_0 + w_1*x0
 
 # Draw the fitting line
 # Đường thẳng tìm được là đường có màu vàng có phương trình y = 4.0071715 + 2.98225924x
-plt.plot(X.T, y.T, 'b.')     # data
+plt.plot(X.T, y.T, 'b.')     # datas
 plt.plot(x0, y0, 'y', linewidth = 2)   # the fitting line
 plt.axis([0, 1, 0, 10])
 plt.show()

@@ -19,10 +19,10 @@ def softmax_stable(Z):
     return A
 
 
-# tạo simulated data (randomly generate data)
+# tạo simulated datas (randomly generate datas)
 # số điểm dữ liệu chỉ là N = 2, số chiều dữ liệu d = 2, và số classes C = 3
 N = 2  # number of training sample
-d = 2  # data dimension
+d = 2  # datas dimension
 C = 3  # number of classes
 
 X = np.random.randn(d, N)
@@ -97,7 +97,7 @@ def softmax_regression(X, y, W_init, eta, tol=1e-4, max_count=10000):
     count = 0
     check_w_after = 20
     while count < max_count:
-        # mix data
+        # mix datas
         mix_id = np.random.permutation(N)
         for i in mix_id:
             xi = X[:, i].reshape(d, 1)
@@ -122,7 +122,7 @@ W = softmax_regression(X, y, W_init, eta)
 print(W[-1])
 
 
-# class của 1 new data có thể tìm bằng cách xác định vị trí của giá trị lớn nhất ở đầu ra dự đoán (tương ứng với xác suất điểm dữ liệu rơi vào class đó là lớn nhất)
+# class của 1 new datas có thể tìm bằng cách xác định vị trí của giá trị lớn nhất ở đầu ra dự đoán (tương ứng với xác suất điểm dữ liệu rơi vào class đó là lớn nhất)
 # các class được đánh số là 0, 1, 2, ..., C.
 def pred(W, X):
     A = softmax_stable(W.T.dot(X))
@@ -138,7 +138,7 @@ X2 = np.random.multivariate_normal(means[2], cov, N)
 
 # each column is a datapoint
 X = np.concatenate((X0, X1, X2), axis=0).T
-# extended data
+# extended datas
 X = np.concatenate((np.ones((1, 3 * N)), X), axis=0)
 C = 3
 

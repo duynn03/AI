@@ -33,12 +33,12 @@ ytest_all = np.array(mntest.test_labels.tolist())
 cls = [[0], [1]]
 
 
-# extract toàn bộ dữ liệu cho các chữ số 0 và 1 trong tập training data và test data
-#  X: numpy array, matrix of size (N, d), d is data dim
+# extract toàn bộ dữ liệu cho các chữ số 0 và 1 trong tập training datas và test datas
+#  X: numpy array, matrix of size (N, d), d is datas dim
 #  y: numpy array, size (N, )
 #  cls: two lists of labels. For example: cls = [[1, 4, 7], [5, 6, 8]]
 #  return:
-#      X: extracted data
+#      X: extracted datas
 #      y: extracted label
 #          (0 and 1, corresponding to two lists in cls)
 def extract_data(X, y, classes):
@@ -58,20 +58,20 @@ def extract_data(X, y, classes):
     return (X_res, y_res)
 
 
-# extract data for training
+# extract datas for training
 (X_train, y_train) = extract_data(Xtrain_all, ytrain_all, cls)
 
-# extract data for test
+# extract datas for test
 (X_test, y_test) = extract_data(Xtest_all, ytest_all, cls)
 
 # train the logistic regression model
 logreg = linear_model.LogisticRegression(C=1e5)  # just a big number
 logreg.fit(X_train, y_train)
-# logreg.fit(Xtrain_all, ytrain_all) # trainning toàn bộ data
+# logreg.fit(Xtrain_all, ytrain_all) # trainning toàn bộ datas
 
 # predict
 y_pred = logreg.predict(X_test)
-# y_pred = logreg.predict(Xtest_all) # test toàn bộ data
+# y_pred = logreg.predict(Xtest_all) # test toàn bộ datas
 print("Accuracy: %.2f %%" % (100 * accuracy_score(y_test, y_pred.tolist())))
 
 # những ảnh phân loại bị sai

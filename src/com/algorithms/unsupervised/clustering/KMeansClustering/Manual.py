@@ -24,7 +24,7 @@ K = 3
 original_label = np.asarray([0] * N + [1] * N + [2] * N).T
 
 
-# display data
+# display datas
 # mỗi cluster tương ứng với một màu
 def kmeans_display(X, label):
     K = np.amax(label) + 1
@@ -53,7 +53,7 @@ def kmeans_init_centers(X, k):
 
 # B2: Gán label mới cho các điểm khi biết các centers (Cố định M để tìm Y)
 def kmeans_assign_labels(X, centers):
-    # calculate pairwise distances btw data and centers
+    # calculate pairwise distances btw datas and centers
     D = cdist(X, centers)
     # return index of the closest center
     return np.argmin(D, axis=1)

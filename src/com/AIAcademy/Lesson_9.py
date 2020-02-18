@@ -82,9 +82,9 @@ def transformFunction(x):
     return np.round(x * 255)
 
 
-# create transform
+# create PerspectiveTransform
 transformer = FunctionTransformer(transformFunction)
-# transform feature matrix
+# PerspectiveTransform feature matrix
 result = transformer.transform(features)
 print(result)
 

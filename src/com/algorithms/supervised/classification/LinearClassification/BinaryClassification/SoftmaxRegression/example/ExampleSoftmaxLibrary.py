@@ -8,13 +8,13 @@ from sklearn.metrics import accuracy_score
 # https://github.com/tiepvupsu/tiepvupsu.github.io/blob/master/assets/13_softmax/Softmax%20Regression.ipynb
 
 mntrain = MNIST(
-    'C:/Users/Admin/Desktop/Working/Gitlap/Python/DemoMachineLearning/src/com/data/MNIST/')
+    'C:/Users/Admin/Desktop/Working/Gitlap/Python/DemoMachineLearning/src/com/datas/MNIST/')
 mntrain.load_training()
 Xtrain = np.asarray(mntrain.train_images) / 255.0
 ytrain = np.array(mntrain.train_labels.tolist())
 
 mntest = MNIST(
-    'C:/Users/Admin/Desktop/Working/Gitlap/Python/DemoMachineLearning/src/com/data/MNIST/')
+    'C:/Users/Admin/Desktop/Working/Gitlap/Python/DemoMachineLearning/src/com/datas/MNIST/')
 mntest.load_testing()
 Xtest = np.asarray(mntest.test_images) / 255.0
 ytest = np.array(mntest.test_labels.tolist())

@@ -13,7 +13,7 @@ Xbar = np.array([[0.50, 0.75, 1.00, 1.25, 1.50, 1.75, 1.75, 2.00, 2.25, 2.50,
                   2.75, 3.00, 3.25, 3.50, 4.00, 4.25, 4.50, 4.75, 5.00, 5.50]])
 y = np.array([0, 0, 0, 0, 0, 0, 1, 0, 1, 0,
               1, 0, 1, 0, 1, 1, 1, 1, 1, 1])
-# extended data
+# extended datas
 Xbar = np.concatenate((np.ones((1, Xbar.shape[1])), Xbar), axis=0)
 
 def sigmoid(s):
@@ -27,7 +27,7 @@ def logistic_sigmoid_regression(X, y, w_init, eta, tol = 1e-4, max_count = 10000
     count = 0
     check_w_after = 20
     while count < max_count:
-        # mix data
+        # mix datas
         mix_id = np.random.permutation(N)
         for i in mix_id:
             xi = X[:, i].reshape(d, 1)

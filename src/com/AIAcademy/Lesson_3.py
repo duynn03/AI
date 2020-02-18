@@ -171,7 +171,7 @@ except ZeroDivisionError:
 
 # Question 14:
 # Adding handle exception code to this program to made your functions
-# more robust to erroneous input/data.
+# more robust to erroneous input/datas.
 # def example1():
 #  for i in range( 3 ):
 #  x = int( input( "enter a number: " ) )
@@ -198,7 +198,7 @@ example1()
 
 # Question 15:
 # Adding handle exception code to this program to made your functions
-# more robust to erroneous input/data.
+# more robust to erroneous input/datas.
 # def example2( L ):
 #  print( "\n\nExample 2" )
 #  sum = 0

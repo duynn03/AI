@@ -64,7 +64,7 @@ def SGD(theta_init, sgrad, eta):
     N = X.shape[0]
     count = 0
     for it in range(10):
-        # shuffle data
+        # shuffle datas
         rd_id = np.random.permutation(N)
         for i in range(N):
             count += 1
