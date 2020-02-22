@@ -11,18 +11,18 @@ from src.com.cv.SortContours.SortingContours import sort_contours
 
 # define the answer key which maps the question number to the correct answer
 # Question #1: B
-# Question #2: E
-# Question #3: A
-# Question #4: D
+# Question #2: D, E
+# Question #3: A, D, E
+# Question #4: A, D
 # Question #5: B
-ANSWER_KEY = {0: 1, 1: 3, 2: 0, 3: 3, 4: 1}
+ANSWER_KEY = {0: [1], 1: [3, 4], 2: [0, 3, 4], 3: [0, 3], 4: [1]}
 
 # init the number of correct user answers
 user_correct_answers_number = 0
 
 # load the image
 image_path = "images/"
-original_image = cv2.imread(image_path + "test_01.png")
+original_image = cv2.imread(image_path + "test_05.png")
 # show original image
 window_name = 'Original Image'
 cv2.imshow(window_name, original_image)
@@ -227,7 +227,7 @@ for (question_number, first_answer_index) in enumerate(np.arange(0, total_number
     plt.show()
 
     # initialize the index of the user answer
-    user_answer = None
+    user_answers = []
 
     # loop over the each answer contours
     for (answer_number, answer_contour) in enumerate(current_question_contours):
@@ -259,24 +259,36 @@ for (question_number, first_answer_index) in enumerate(np.arange(0, total_number
         non_zero_pixel_amount = cv2.countNonZero(answer_contour_image)
         print("non-zero pixel amount: ", non_zero_pixel_amount)
 
-        # if the current total has a larger number of total non-zero pixels
-        # then we are examining the currently bubbled-in answer
-        if user_answer is None or non_zero_pixel_amount > user_answer[0]:
-            user_answer = (non_zero_pixel_amount, answer_number)
+        # nếu contour > 450 thì sẽ xác định là user chọn đáp án này
+        if non_zero_pixel_amount > 650:
+            answer = (answer_number, answer_contour)
+            # user_answer = (non_zero_pixel_amount, answer_number)
+            user_answers.append(answer)
 
-    # initialize the index of the correct answer
-    correct_answer_index = ANSWER_KEY[question_number]
+    # initialize the index of the correct answers
+    correct_answer_indexs = ANSWER_KEY[question_number]
+
+    # init user answer index
+    user_answer_indexs = []
+    for user_answer in user_answers:
+        user_answer_indexs.append(user_answer[0])
+    print("user answer: ", user_answer_indexs)
 
     # check to see if the user answer is correct
-    if correct_answer_index == user_answer[1]:
+    if correct_answer_indexs == user_answer_indexs:
         color = (0, 255, 0)  # green
         user_correct_answers_number += 1
     else:
         # the user answer is incorrect
         color = (0, 0, 255)  # red
 
+    # init answer contours
+    answer_contours = []
+    for i in correct_answer_indexs:
+        answer_contours.append(current_question_contours[i])
+
     # draw the outline of the correct answer on the test
-    cv2.drawContours(marking_image, [current_question_contours[correct_answer_index]], -1, color, 3)
+    cv2.drawContours(marking_image, answer_contours, -1, color, 3)
     # show Result each Question Image
     window_name = 'Question ' + str((question_number + 1)) + ' Marking Image'
     cv2.imshow(window_name, marking_image)
