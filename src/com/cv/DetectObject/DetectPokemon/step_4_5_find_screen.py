@@ -40,12 +40,15 @@ window_name = 'Edged Image'
 cv2.imshow(window_name, edged_image)
 cv2.waitKey()
 
-# find contours in the edged image, keep only the largest ones, and initialize our screen contour
+# find contours in the edged image, keep only the largest ones
 contours = cv2.findContours(edged_image.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+# parsing the contours for various versions of OpenCV.
 contours = imutils.grab_contours(contours)
 
 # sorting our contours, from largest to smallest by calculating the area of the contour using and We now have only the 10 largest contours
 contours = sorted(contours, key=cv2.contourArea, reverse=True)[:10]
+
+# initialize our screen contour
 screenContour = None
 
 # loop over our contours to determine which contour is the screen contour

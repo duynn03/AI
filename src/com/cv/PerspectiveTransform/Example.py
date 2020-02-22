@@ -2,7 +2,6 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 
-# construct the argument parse and parse the arguments
 from src.com.cv.PerspectiveTransform.Transform import four_point_transform
 
 # load the image and grab the source coordinates (i.e. the list of of (x, y) points)

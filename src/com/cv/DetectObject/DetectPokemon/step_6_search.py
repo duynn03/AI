@@ -6,10 +6,11 @@ import imutils
 import matplotlib.pyplot as plt
 import numpy as np
 
-from src.com.algorithms.technical.DetectObject.Searcher import Searcher
-from src.com.algorithms.technical.DetectObject.zernikemoments import ZernikeMoments
 
 # load the index
+from src.com.cv.DetectObject.DetectPokemon.Searcher import Searcher
+from src.com.cv.DetectObject.DetectPokemon.zernikemoments import ZernikeMoments
+
 indexs_path = sys.path[0] + "\\indexs\\"
 index_file = open(indexs_path + "index.cpickle", "rb").read()
 index = pickle.loads(index_file)
@@ -50,6 +51,7 @@ contours = cv2.findContours(binary_pokemon_image.copy(), cv2.RETR_EXTERNAL, cv2.
 # parsing the contours for various versions of OpenCV.
 contours = imutils.grab_contours(contours)
 contours = sorted(contours, key=cv2.contourArea, reverse=True)[0]
+print(contours.shape)
 # sort the contours based on their area (in descending order) and keeping only the largest contour and discard the others.
 
 # draw contours
