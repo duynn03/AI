@@ -33,7 +33,7 @@ copy_original_image = original_image.copy()
 
 # convert the image to grayscale
 gray_image = cv2.cvtColor(copy_original_image, cv2.COLOR_BGR2GRAY)
-# show Resized image
+# show Gray image
 window_name = 'Gray Image'
 cv2.imshow(window_name, gray_image)
 cv2.waitKey()
