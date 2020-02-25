@@ -4,6 +4,7 @@ from scipy.spatial import distance
 
 
 # method 1
+# Nhược điểm: nếu image có diff hoặc sum giống nhau thì sẽ có thể sort sai
 # https://www.pyimagesearch.com/2014/08/25/4-point-opencv-getperspective-transform-example/
 def order_points_old(points):
     # initialzie a list of coordinates that will be ordered such that
@@ -29,7 +30,9 @@ def order_points_old(points):
     return rect
 
 
-# Method 2:
+# Method 2: khắc phục được nhược điểm của method 1
+#   from imutils import perspective
+#   rect = perspective.order_points(points)
 # https://www.pyimagesearch.com/2016/03/21/ordering-coordinates-clockwise-with-python-and-opencv/
 def order_points(points):
     # sort the points based on their x-coordinates

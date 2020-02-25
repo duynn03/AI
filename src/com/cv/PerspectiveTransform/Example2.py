@@ -2,6 +2,11 @@ from __future__ import print_function
 
 import cv2
 import imutils
+import matplotlib.pyplot as plt
+import numpy as np
+
+from src.com.cv.PerspectiveTransform.Transform import order_points_old, order_points
+from src.com.cv.SortContours.SortingContours import sort_contours, draw_text_in_center_contour
 
 # https://www.pyimagesearch.com/2016/03/21/ordering-coordinates-clockwise-with-python-and-opencv/
 
@@ -51,3 +56,79 @@ cv2.waitKey()
 contours = cv2.findContours(edged_image.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 # parsing the contours for various versions of OpenCV.
 contours = imutils.grab_contours(contours)
+
+# draw text in center contours in origin image
+unsorted_original_image = original_image.copy()
+# loop over the (unsorted) contours and draw contour
+for (i, contour) in enumerate(contours):
+    unsorted_original_image = draw_text_in_center_contour(unsorted_original_image, contour, i)
+
+# sort the contours according to the provided method
+method = "left-to-right"
+(contours, boundingBoxes) = sort_contours(contours, method)
+sorted_original_image = original_image.copy()
+# loop over the (now sorted) contours and draw them
+for (i, contour) in enumerate(contours):
+    draw_text_in_center_contour(sorted_original_image, contour, i)
+
+# show result
+fig = plt.figure("Sorting Contours by " + method)
+images = ("Unsorted", unsorted_original_image), ("Sorted", sorted_original_image)
+# show the image
+for (i, (name, image)) in enumerate(images):
+    ax = fig.add_subplot(1, 2, i + 1)
+    ax.set_title(name)
+    plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+    plt.axis("off")
+# show the figure
+plt.show()
+
+# loop over the contours individually
+for (i, c) in enumerate(contours):
+    # if the contour is not sufficiently large, ignore it
+    if cv2.contourArea(c) < 100:
+        continue
+
+    # compute the rotated bounding box of the contour
+    box = cv2.minAreaRect(c)
+    box_points = cv2.boxPoints(box)
+    box_points = np.array(box_points, dtype="int")
+    # show the original coordinates
+    print("Object #{}:".format(i + 1))
+    print(box_points)
+
+    # draw the contours
+    cv2.drawContours(original_image, [box_points], -1, (0, 255, 0), 2)
+    # show Screen Contour
+    window_name = 'Contour'
+    cv2.imshow(window_name, original_image)
+    cv2.waitKey()
+
+    # order the points in the contour such that they appear in top-left, top-right, bottom-right, and bottom-left order
+    #  draw the outline of the rotated bounding box
+    rect_method_old = order_points_old(box_points)
+    # print rect
+    print("Order points by method 1", rect_method_old.astype("int"))
+
+    colors = ((0, 0, 255), (240, 0, 159), (255, 0, 0), (255, 255, 0))
+    copy_original_image = original_image.copy()
+    # loop over the original points and draw them
+    for ((x, y), color) in zip(rect_method_old, colors):
+        cv2.circle(copy_original_image, (int(x), int(y)), 5, color, -1)
+
+    # draw the object num at the top-left corner
+    cv2.putText(copy_original_image, "Object #{}".format(i + 1),
+                (int(rect_method_old[0][0] - 15), int(rect_method_old[0][1] - 15)), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 255, 255), 2)
+
+    # show Image
+    window_name = 'Image'
+    cv2.imshow(window_name, copy_original_image)
+    cv2.waitKey()
+
+
+
+    #rect_method_new = order_points(box_points)
+    # print rect
+    #print("Order points by method 2", rect_method_new.astype("int"))
+
+    #print("")

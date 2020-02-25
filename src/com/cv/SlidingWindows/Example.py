@@ -2,7 +2,7 @@ import time
 
 import cv2
 
-from src.com.cv.DetectObject.SlidingWindows.SlidingWindow import sliding_window
+from src.com.cv.SlidingWindows.SlidingWindow import sliding_window
 from src.com.cv.Pyramids.Pyramid import pyramid
 
 # load the image

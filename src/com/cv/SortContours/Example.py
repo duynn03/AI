@@ -74,13 +74,14 @@ for (i, contour) in enumerate(contours):
 # sort the contours according to the provided method
 method = "right-to-left"
 (contours, boundingBoxes) = sort_contours(contours, method)
+sorted_original_image = original_image.copy()
 # loop over the (now sorted) contours and draw them
 for (i, contour) in enumerate(contours):
-    draw_text_in_center_contour(original_image, contour, i)
+    draw_text_in_center_contour(sorted_original_image, contour, i)
 
 # show result
 fig = plt.figure("Sorting Contours by " + method)
-images = ("Unsorted", unsorted_original_image), ("Sorted", original_image)
+images = ("Unsorted", unsorted_original_image), ("Sorted", sorted_original_image)
 # show the image
 for (i, (name, image)) in enumerate(images):
     ax = fig.add_subplot(1, 2, i + 1)
