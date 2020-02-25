@@ -1,10 +1,11 @@
 import cv2
 import numpy as np
+from scipy.spatial import distance
 
 
+# method 1
 # https://www.pyimagesearch.com/2014/08/25/4-point-opencv-getperspective-transform-example/
-
-def order_points(points):
+def order_points_old(points):
     # initialzie a list of coordinates that will be ordered such that
     #       the first entry in the list is the top-left,
     #       the second entry is the top-right
@@ -26,6 +27,35 @@ def order_points(points):
     rect[3] = points[np.argmax(diff)]
     # return the ordered coordinates
     return rect
+
+
+# Method 2:
+# https://www.pyimagesearch.com/2016/03/21/ordering-coordinates-clockwise-with-python-and-opencv/
+def order_points(points):
+    # sort the points based on their x-coordinates
+    xSorted = points[np.argsort(points[:, 0]), :]
+
+    # grab the left-most and right-most points from the sorted x-roodinate points
+    #       leftMosts: including top-left and bottom-left
+    #       rightMosts: including top-right and bottom-right
+    leftMosts = xSorted[:2, :]
+    rightMosts = xSorted[2:, :]
+
+    # now, sort the left-mosts coordinates according to their y-coordinates
+    # so we can grab the top-left and bottom-left points, respectively
+    leftMosts = leftMosts[np.argsort(leftMosts[:, 1]), :]
+    (tl, bl) = leftMosts
+
+    # now that we have the top-left coordinate
+    # use it as an anchor to calculate the Euclidean distance between the top-left and right-most points;
+    # (By the definition of a triangle, the hypotenuse will be the largest side of a right-angled triangle.)
+    # by the Pythagorean theorem, the point with the largest distance will be our bottom-right point
+    D = distance.cdist(tl[np.newaxis], rightMosts, "euclidean")[0]
+    (br, tr) = rightMosts[np.argsort(D)[::-1], :]
+
+    # return the coordinates in top-left, top-right, bottom-right, and bottom-left order
+    return np.array([tl, tr, br, bl], dtype="float32")
+
 
 # points là 4 điểm point bao quanh ROI image
 def four_point_transform(image, points):

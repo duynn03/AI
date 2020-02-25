@@ -4,10 +4,11 @@ import numpy as np
 
 from src.com.cv.PerspectiveTransform.Transform import four_point_transform
 
-# load the image and grab the source coordinates (i.e. the list of of (x, y) points)
+# load the image
 image_path = "images/"
-original_image = cv2.imread(image_path + "example_03.png")
+original_image = cv2.imread(image_path + "example_01.png")
 
+# grab the source coordinates (i.e. the list of of (x, y) points)
 points_01 = np.array(eval("[(73, 239), (356, 117), (475, 265), (187, 443)]"), dtype="float32")
 # points_02 = np.array(eval("[(101, 185), (393, 151), (479, 323), (187, 441)]"), dtype="float32")
 # points_03 = np.array(eval("[(63, 242), (291, 110), (361, 252), (78, 386)]"), dtype="float32")
