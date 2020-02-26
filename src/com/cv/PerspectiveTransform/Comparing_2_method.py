@@ -147,7 +147,7 @@ for (index, contour) in enumerate(contours):
                 (int(rect_method_2[0][0] - 15), int(rect_method_2[0][1] - 15)), cv2.FONT_HERSHEY_SIMPLEX, 0.55,
                 (255, 255, 255), 2)
 
-    # show compare contour sorting
+    # show compare 2 method
     fig = plt.figure("Step " + str(index + 1) + ":")
     images = ("Method 1", method_1_original_image), ("Method 2", method_2_original_image)
     # show the image
