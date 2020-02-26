@@ -31,6 +31,7 @@ def order_points_old(points):
 
 
 # Method 2: khắc phục được nhược điểm của method 1
+# ordered clockwise
 #   from imutils import perspective
 #   rect = perspective.order_points(points)
 # https://www.pyimagesearch.com/2016/03/21/ordering-coordinates-clockwise-with-python-and-opencv/
