@@ -2,10 +2,11 @@ import cv2
 import imutils
 import matplotlib.pyplot as plt
 import numpy as np
-
+from scipy.spatial import distance
 from src.com.cv.PerspectiveTransform.Transform import order_points
 from src.com.cv.SortContours.SortingContours import sort_contours, draw_text_in_center_contour
 
+# https://www.pyimagesearch.com/2016/03/28/measuring-size-of-objects-in-an-image-with-opencv/
 
 # caculate mid point
 def midpoint(ptA, ptB):
@@ -146,3 +147,25 @@ for (index, contour) in enumerate(contours):
     # draw lines between the midpoints
     cv2.line(copy_original_image, (int(tl_tr_X), int(tl_tr_Y)), (int(bl_br_X), int(bl_br_Y)), (255, 0, 255), 2)
     cv2.line(copy_original_image, (int(tl_bl_X), int(tl_bl_Y)), (int(tr_br_X), int(tr_br_Y)),(255, 0, 255), 2)
+
+    # compute the Euclidean distance between the midpoints
+    distance_A = distance.euclidean((tl_tr_X, tl_tr_Y), (bl_br_X, bl_br_Y))
+    distance_B = distance.euclidean((tl_bl_X, tl_bl_Y), (tr_br_X, tr_br_Y))
+
+    # if the pixels per metric has not been initialized, then compute it as the ratio of pixels to supplied metric (in this case, inches)
+    if pixelsPerMetric is None:
+        pixelsPerMetric = distance_B / reference_object_width
+
+    # compute the size of the object
+    dimA = dA / pixelsPerMetric
+    dimB = dB / pixelsPerMetric
+    # draw the object sizes on the image
+    cv2.putText(orig, "{:.1f}in".format(dimA),
+                (int(tltrX - 15), int(tltrY - 10)), cv2.FONT_HERSHEY_SIMPLEX,
+                0.65, (255, 255, 255), 2)
+    cv2.putText(orig, "{:.1f}in".format(dimB),
+                (int(trbrX + 10), int(trbrY)), cv2.FONT_HERSHEY_SIMPLEX,
+                0.65, (255, 255, 255), 2)
+    # show the output image
+    cv2.imshow("Image", orig)
+    cv2.waitKey(0)
