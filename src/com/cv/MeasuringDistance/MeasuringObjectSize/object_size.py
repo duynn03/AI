@@ -3,8 +3,10 @@ import imutils
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.spatial import distance
+
 from src.com.cv.PerspectiveTransform.Transform import order_points
 from src.com.cv.SortContours.SortingContours import sort_contours, draw_text_in_center_contour
+
 
 # https://www.pyimagesearch.com/2016/03/28/measuring-size-of-objects-in-an-image-with-opencv/
 
@@ -15,7 +17,7 @@ def midpoint(ptA, ptB):
 
 # load the image
 image_path = "images/"
-original_image = cv2.imread(image_path + "test_05.png")
+original_image = cv2.imread(image_path + "example_01.png")
 # show original image
 window_name = 'Original Image'
 cv2.imshow(window_name, original_image)
@@ -64,7 +66,7 @@ contours = imutils.grab_contours(contours)
 unsorted_original_image = original_image.copy()
 # loop over the (unsorted) contours and draw contour
 for (index, contour) in enumerate(contours):
-    unsorted_original_image = draw_text_in_center_contour(unsorted_original_image, contour, index)
+   unsorted_original_image = draw_text_in_center_contour(unsorted_original_image, contour, index)
 
 # sort the contours according to the provided method
 method = "left-to-right"
@@ -87,7 +89,7 @@ for (index, (name, image)) in enumerate(images):
 plt.show()
 
 # with of reference object(in inches)
-reference_object_width =
+reference_object_width_by_metric = 1
 
 # initialize 'pixels per metric' calibration variable
 pixelsPerMetric = None
@@ -102,14 +104,9 @@ for (index, contour) in enumerate(contours):
     box = cv2.minAreaRect(contour)
     box_points = cv2.boxPoints(box)
     box_points = np.array(box_points, dtype="int")
-    # show the original coordinates
-    print("Object #{}:".format(index + 1))
-    print(box_points)
 
     # order the points in the contour such that they appear in top-left, top-right, bottom-right, and bottom-left order
-    # draw the outline of the rotated bounding box
     rect = order_points(box_points)
-    print("Order points: \n", box_points.astype("int"))
 
     # loop over the ordered points and draw them
     for (x, y) in rect:
@@ -120,22 +117,18 @@ for (index, contour) in enumerate(contours):
     cv2.imshow(window_name, copy_original_image)
     cv2.waitKey()
 
-
+    # draw the outline of the rotated bounding box
     cv2.drawContours(copy_original_image, [box_points], -1, (0, 255, 0), 2)
 
-    # compute the center of the bounding box
-    center_X = np.average(box[:, 0])
-    center_Y = np.average(box[:, 1])
-
     # unpack the ordered bounding box
-    (tl, tr, br, bl) = box
+    (tl, tr, br, bl) = box_points
     # compute the midpoint between the top-left and top-right coordinates
     (tl_tr_X, tl_tr_Y) = midpoint(tl, tr)
     # compute the midpoint between bottom-left and bottom-right coordinates
     (bl_br_X, bl_br_Y) = midpoint(bl, br)
     # compute the midpoint between the top-left and bottom-left coordinates
     (tl_bl_X, tl_bl_Y) = midpoint(tl, bl)
-    # the midpoint between the top-righ and bottom-right
+    # the midpoint between the top-right and bottom-right
     (tr_br_X, tr_br_Y) = midpoint(tr, br)
 
     # draw the midpoints
@@ -146,26 +139,29 @@ for (index, contour) in enumerate(contours):
 
     # draw lines between the midpoints
     cv2.line(copy_original_image, (int(tl_tr_X), int(tl_tr_Y)), (int(bl_br_X), int(bl_br_Y)), (255, 0, 255), 2)
-    cv2.line(copy_original_image, (int(tl_bl_X), int(tl_bl_Y)), (int(tr_br_X), int(tr_br_Y)),(255, 0, 255), 2)
+    cv2.line(copy_original_image, (int(tl_bl_X), int(tl_bl_Y)), (int(tr_br_X), int(tr_br_Y)), (255, 0, 255), 2)
+
+    # show Ordered points
+    window_name = 'Drawing Line'
+    cv2.imshow(window_name, copy_original_image)
+    cv2.waitKey()
 
     # compute the Euclidean distance between the midpoints
-    distance_A = distance.euclidean((tl_tr_X, tl_tr_Y), (bl_br_X, bl_br_Y))
-    distance_B = distance.euclidean((tl_bl_X, tl_bl_Y), (tr_br_X, tr_br_Y))
+    distance_edge_1_by_pixel = distance.euclidean((tl_tr_X, tl_tr_Y), (bl_br_X, bl_br_Y))
+    distance_edge_2_by_pixel = distance.euclidean((tl_bl_X, tl_bl_Y), (tr_br_X, tr_br_Y))
 
     # if the pixels per metric has not been initialized, then compute it as the ratio of pixels to supplied metric (in this case, inches)
     if pixelsPerMetric is None:
-        pixelsPerMetric = distance_B / reference_object_width
+        pixelsPerMetric = distance_edge_2_by_pixel / reference_object_width_by_metric
 
-    # compute the size of the object
-    dimA = dA / pixelsPerMetric
-    dimB = dB / pixelsPerMetric
+    # compute the size of the current object
+    distance_edge_1_by_metric = distance_edge_1_by_pixel / pixelsPerMetric
+    distance_edge_2_by_metric = distance_edge_2_by_pixel / pixelsPerMetric
     # draw the object sizes on the image
-    cv2.putText(orig, "{:.1f}in".format(dimA),
-                (int(tltrX - 15), int(tltrY - 10)), cv2.FONT_HERSHEY_SIMPLEX,
-                0.65, (255, 255, 255), 2)
-    cv2.putText(orig, "{:.1f}in".format(dimB),
-                (int(trbrX + 10), int(trbrY)), cv2.FONT_HERSHEY_SIMPLEX,
-                0.65, (255, 255, 255), 2)
+    cv2.putText(copy_original_image, "{:.1f}in".format(distance_edge_1_by_metric), (int(tl_tr_X - 25), int(tl_tr_Y)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+    cv2.putText(copy_original_image, "{:.1f}in".format(distance_edge_2_by_metric), (int(tr_br_X - 25), int(tr_br_Y - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+
     # show the output image
-    cv2.imshow("Image", orig)
-    cv2.waitKey(0)
+    window_name = "Estimating object's size"
+    cv2.imshow(window_name, copy_original_image)
+    cv2.waitKey()
