@@ -1,18 +1,20 @@
-from __future__ import print_function
-
 import cv2
 import imutils
 import matplotlib.pyplot as plt
 import numpy as np
 
-from src.com.cv.PerspectiveTransform.Transform import order_points_old, order_points
+from src.com.cv.PerspectiveTransform.Transform import order_points
 from src.com.cv.SortContours.SortingContours import sort_contours, draw_text_in_center_contour
 
-# https://www.pyimagesearch.com/2016/03/21/ordering-coordinates-clockwise-with-python-and-opencv/
+
+# caculate mid point
+def midpoint(ptA, ptB):
+    return ((ptA[0] + ptB[0]) / 2, (ptA[1] + ptB[1]) / 2)
+
 
 # load the image
 image_path = "images/"
-original_image = cv2.imread(image_path + "example_04.png")
+original_image = cv2.imread(image_path + "test_05.png")
 # show original image
 window_name = 'Original Image'
 cv2.imshow(window_name, original_image)
@@ -83,14 +85,18 @@ for (index, (name, image)) in enumerate(images):
 # show the figure
 plt.show()
 
-method_1_original_image = original_image.copy()
-method_2_original_image = original_image.copy()
+# with of reference object(in inches)
+reference_object_width =
+
+# initialize 'pixels per metric' calibration variable
+pixelsPerMetric = None
+
+copy_original_image = original_image.copy()
 # loop over the contours individually
 for (index, contour) in enumerate(contours):
     # if the contour is not sufficiently large, ignore it
     if cv2.contourArea(contour) < 100:
         continue
-
     # compute the rotated bounding box of the contour
     box = cv2.minAreaRect(contour)
     box_points = cv2.boxPoints(box)
@@ -99,62 +105,44 @@ for (index, contour) in enumerate(contours):
     print("Object #{}:".format(index + 1))
     print(box_points)
 
-    # draw the contours
-    cv2.drawContours(method_1_original_image, [box_points], -1, (0, 255, 0), 2)
-    cv2.drawContours(method_2_original_image, [box_points], -1, (0, 255, 0), 2)
-
-    # show compare contour sorting
-    fig = plt.figure("Contours")
-    images = ("Method 1 Contours", method_1_original_image), ("Method 2 Contours", method_2_original_image)
-    # show the image
-    for (i, (name, image)) in enumerate(images):
-        ax = fig.add_subplot(1, 2, i + 1)
-        ax.set_title(name)
-        plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-        plt.axis("off")
-    # show the figure
-    plt.show()
-
     # order the points in the contour such that they appear in top-left, top-right, bottom-right, and bottom-left order
     # draw the outline of the rotated bounding box
-    rect_method_1 = order_points_old(box_points)
-    # print rect
-    print("Order points by method 1: \n", rect_method_1.astype("int"))
+    rect = order_points(box_points)
+    print("Order points: \n", box_points.astype("int"))
 
-    # top-left: red, top-right: purple, bottom-right: blue, bottom-left: teal.
-    colors = ((0, 0, 255), (240, 0, 159), (255, 0, 0), (255, 255, 0))
+    # loop over the ordered points and draw them
+    for (x, y) in rect:
+        cv2.circle(copy_original_image, (int(x), int(y)), 5, (0, 0, 255), -1)
 
-    # loop over the original points and draw them
-    for ((x, y), color) in zip(rect_method_1, colors):
-        cv2.circle(method_1_original_image, (int(x), int(y)), 5, color, -1)
+    # show Ordered points
+    window_name = 'Ordered Points'
+    cv2.imshow(window_name, copy_original_image)
+    cv2.waitKey()
 
-    # draw the object num at the top-left corner
-    cv2.putText(method_1_original_image, "Object #{}".format(index + 1),
-                (int(rect_method_1[0][0] - 15), int(rect_method_1[0][1] - 15)), cv2.FONT_HERSHEY_SIMPLEX, 0.55,
-                (255, 255, 255), 2)
 
-    # method 2
-    rect_method_2 = order_points(box_points)
-    # print rect
-    print("Order points by method 2: \n", rect_method_2.astype("int"))
+    cv2.drawContours(copy_original_image, [box_points], -1, (0, 255, 0), 2)
 
-    # loop over the original points and draw them
-    for ((x, y), color) in zip(rect_method_2, colors):
-        cv2.circle(method_2_original_image, (int(x), int(y)), 5, color, -1)
+    # compute the center of the bounding box
+    center_X = np.average(box[:, 0])
+    center_Y = np.average(box[:, 1])
 
-    # draw the object num at the top-left corner
-    cv2.putText(method_2_original_image, "Object #{}".format(index + 1),
-                (int(rect_method_2[0][0] - 15), int(rect_method_2[0][1] - 15)), cv2.FONT_HERSHEY_SIMPLEX, 0.55,
-                (255, 255, 255), 2)
+    # unpack the ordered bounding box
+    (tl, tr, br, bl) = box
+    # compute the midpoint between the top-left and top-right coordinates
+    (tl_tr_X, tl_tr_Y) = midpoint(tl, tr)
+    # compute the midpoint between bottom-left and bottom-right coordinates
+    (bl_br_X, bl_br_Y) = midpoint(bl, br)
+    # compute the midpoint between the top-left and bottom-left coordinates
+    (tl_bl_X, tl_bl_Y) = midpoint(tl, bl)
+    # the midpoint between the top-righ and bottom-right
+    (tr_br_X, tr_br_Y) = midpoint(tr, br)
 
-    # show compare 2 method
-    fig = plt.figure("Step " + str(index + 1) + ":")
-    images = ("Method 1", method_1_original_image), ("Method 2", method_2_original_image)
-    # show the image
-    for (i, (name, image)) in enumerate(images):
-        ax = fig.add_subplot(1, 2, i + 1)
-        ax.set_title(name)
-        plt.imshow(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
-        plt.axis("off")
-    # show the figure
-    plt.show()
+    # draw the midpoints
+    cv2.circle(copy_original_image, (int(tl_tr_X), int(tl_tr_Y)), 5, (255, 0, 0), -1)
+    cv2.circle(copy_original_image, (int(bl_br_X), int(bl_br_Y)), 5, (255, 0, 0), -1)
+    cv2.circle(copy_original_image, (int(tl_bl_X), int(tl_bl_Y)), 5, (255, 0, 0), -1)
+    cv2.circle(copy_original_image, (int(tr_br_X), int(tr_br_Y)), 5, (255, 0, 0), -1)
+
+    # draw lines between the midpoints
+    cv2.line(copy_original_image, (int(tl_tr_X), int(tl_tr_Y)), (int(bl_br_X), int(bl_br_Y)), (255, 0, 255), 2)
+    cv2.line(copy_original_image, (int(tl_bl_X), int(tl_bl_Y)), (int(tr_br_X), int(tr_br_Y)),(255, 0, 255), 2)
