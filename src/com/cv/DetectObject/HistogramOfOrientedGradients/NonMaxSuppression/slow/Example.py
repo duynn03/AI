@@ -50,10 +50,10 @@ for ((startX, startY, endX, endY), color) in zip(boundingBoxes, colors):
 # clone original image
 after_perform_non_max_suppression = original_image.copy()
 # perform non-maximum suppression on the bounding boxes
-pick = non_max_suppression_slow(boundingBoxes, 0.3)
-print("After applying non-maximum: %d bounding boxes" % (len(pick)))
+keeping_boundingBoxs = non_max_suppression_slow(boundingBoxes, 0.3)
+print("After applying non-maximum: %d bounding boxes" % (len(keeping_boundingBoxs)))
 # draw bounding boxes
-for (startX, startY, endX, endY) in pick:
+for (startX, startY, endX, endY) in keeping_boundingBoxs:
     cv2.rectangle(after_perform_non_max_suppression, (startX, startY), (endX, endY), (0, 255, 0), 2)
 
 # show Result

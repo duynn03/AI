@@ -17,7 +17,7 @@ def non_max_suppression_fast(boundingBoxes, overlapThresh):
 
     # initialize the list of keeping bounding boxes (indexes)
     # (the bounding boxes that we would like to keep, discarding the rest)
-    keeping_boudingBox_indexs = []
+    keeping_boundingBox_indexs = []
 
     # grab the coordinates of the bounding boxes
     start_X = boundingBoxes[:, 0]
@@ -37,7 +37,7 @@ def non_max_suppression_fast(boundingBoxes, overlapThresh):
         keeping_boudingBox_index = sorted_indexs[len(sorted_indexs) - 1]
 
         # add last index to the list of keeping indexes
-        keeping_boudingBox_indexs.append(keeping_boudingBox_index)
+        keeping_boundingBox_indexs.append(keeping_boudingBox_index)
 
         # find the largest (x, y) coordinates for the start of the bounding box
         max_start_X = np.maximum(start_X[keeping_boudingBox_index], start_X[sorted_indexs[:len(sorted_indexs) - 1]])
@@ -59,4 +59,4 @@ def non_max_suppression_fast(boundingBoxes, overlapThresh):
             ([len(sorted_indexs) - 1], np.where(overlap_ratio > overlapThresh)[0])))
 
     # return only the bounding boxes that were picked using the integer data type
-    return boundingBoxes[keeping_boudingBox_indexs].astype("int")
+    return boundingBoxes[keeping_boundingBox_indexs].astype("int")

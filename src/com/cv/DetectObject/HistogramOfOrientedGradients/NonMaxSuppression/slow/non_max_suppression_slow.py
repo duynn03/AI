@@ -13,7 +13,7 @@ def non_max_suppression_slow(boundingBoxes, overlapThresh):
 
     # initialize the list of keeping bounding boxes (indexes)
     # (the bounding boxes that we would like to keep, discarding the rest)
-    keeping_boudingBox_indexs = []
+    keeping_boundingBox_indexs = []
 
     # grab the coordinates of the bounding boxes
     start_X = boundingBoxes[:, 0]
@@ -33,7 +33,7 @@ def non_max_suppression_slow(boundingBoxes, overlapThresh):
         keeping_boudingBox_index = sorted_indexs[len(sorted_indexs) - 1]
 
         # add last index to the list of keeping indexes
-        keeping_boudingBox_indexs.append(keeping_boudingBox_index)
+        keeping_boundingBox_indexs.append(keeping_boudingBox_index)
 
         # initialize the suppression list ((the list of boxes we want to ignore)) using the last index
         ignore_bounding_box_indexs = [len(sorted_indexs) - 1]
@@ -66,4 +66,4 @@ def non_max_suppression_slow(boundingBoxes, overlapThresh):
         sorted_indexs = np.delete(sorted_indexs, ignore_bounding_box_indexs)
 
     # return only the bounding boxes that were picked
-    return boundingBoxes[keeping_boudingBox_indexs]
+    return boundingBoxes[keeping_boundingBox_indexs]
