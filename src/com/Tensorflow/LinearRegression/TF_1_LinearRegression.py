@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
+print(tf.__version__)
 
 # tensorflow 1x, tutorial: https://nguyenvanhieu.vn/xay-dung-mo-hinh-linear-regression/
 # Step 1: Make sample

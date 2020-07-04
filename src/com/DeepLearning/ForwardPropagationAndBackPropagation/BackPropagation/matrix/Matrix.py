@@ -30,54 +30,54 @@ class Layer:
         """
         Calculates the dot product of this layer.
         :param x: The input.
-        :return: The result.
+        :return: The result after active.
         """
 
-        r = np.dot(x, self.weights) + self.bias
-        self.last_activation = self._apply_activation(r)
-        return self.last_activation
+        z = np.dot(x, self.weights) + self.bias
+        self.a = self.apply_activation(z)
+        return self.a
 
-    def _apply_activation(self, r):
+    def apply_activation(self, z):
         """
         Applies the chosen activation function (if any).
-        :param r: The normal value.
+        :param z: The normal value.
         :return: The activated value.
         """
 
         # In case no activation function was chosen
         if self.activation is None:
-            return r
+            return z
 
         # tanh
         if self.activation == 'tanh':
-            return np.tanh(r)
+            return np.tanh(z)
 
         # sigmoid
         if self.activation == 'sigmoid':
-            return 1 / (1 + np.exp(-r))
+            return 1 / (1 + np.exp(-z))
 
-        return r
+        return z
 
-    def apply_activation_derivative(self, r):
+    def apply_activation_derivative(self, z):
         """
         Applies the derivative of the activation function (if any).
-        :param r: The normal value.
+        :param z: The normal value.
         :return: The "derived" value.
         """
 
-        # We use 'r' directly here because its already activated, the only values that
-        # are used in this function are the last activations that were saved.
+        # We use 'z' directly here because its already activated, the only values that
+        # are used in this function are the a that were saved.
 
         if self.activation is None:
-            return r
+            return z
 
         if self.activation == 'tanh':
-            return 1 - r ** 2
+            return 1 - z ** 2
 
         if self.activation == 'sigmoid':
-            return r * (1 - r)
+            return z * (1 - z)
 
-        return r
+        return z
 
 
 class NeuralNetwork:
@@ -86,7 +86,7 @@ class NeuralNetwork:
     """
 
     def __init__(self):
-        self._layers = []
+        self.layers = []
 
     def add_layer(self, layer):
         """
@@ -94,7 +94,7 @@ class NeuralNetwork:
         :param Layer layer: The layer to add.
         """
 
-        self._layers.append(layer)
+        self.layers.append(layer)
 
     def feed_forward(self, X):
         """
@@ -103,10 +103,46 @@ class NeuralNetwork:
         :return: The result.
         """
 
-        for layer in self._layers:
+        for layer in self.layers:
             X = layer.activate(X)
 
         return X
+
+    def backpropagation(self, X, y, learning_rate):
+        """
+        Performs the backward propagation algorithm and updates the layers weights.
+        :param X: The input values.
+        :param y: The target values.
+        :param float learning_rate: The learning rate (between 0 and 1).
+        """
+
+        # Feed forward for the output
+        y_hat = self.feed_forward(X)
+
+        # Loop over the layers backward
+        for i in reversed(range(len(self.layers))):
+            layer = self.layers[i]
+
+            # If this is the output layer
+            if layer == self.layers[-1]:
+                layer.error = y - y_hat
+
+                # The y_hat = layer.z in this case
+                layer.delta = layer.error * layer.apply_activation_derivative(y_hat)
+            else:
+                next_layer = self.layers[i + 1]
+                layer.error = np.dot(next_layer.weights, next_layer.delta)
+                layer.delta = layer.error * layer.apply_activation_derivative(layer.a)
+
+        # Update the weights
+        for i in range(len(self.layers)):
+            layer = self.layers[i]
+
+            # The input is either the previous layers output or X itself (for the first hidden layer)
+            input = np.atleast_2d(X if i == 0 else self.layers[i - 1].a)
+
+            # update weights
+            layer.weights += layer.delta * input.T * learning_rate
 
     """
     N.B: Having a sigmoid activation in the output layer can be interpreted
@@ -131,38 +167,6 @@ class NeuralNetwork:
         # Multiple rows
         return np.argmax(ff, axis=1)
 
-    def backpropagation(self, X, y, learning_rate):
-        """
-        Performs the backward propagation algorithm and updates the layers weights.
-        :param X: The input values.
-        :param y: The target values.
-        :param float learning_rate: The learning rate (between 0 and 1).
-        """
-
-        # Feed forward for the output
-        output = self.feed_forward(X)
-
-        # Loop over the layers backward
-        for i in reversed(range(len(self._layers))):
-            layer = self._layers[i]
-
-            # If this is the output layer
-            if layer == self._layers[-1]:
-                layer.error = y - output
-                # The output = layer.last_activation in this case
-                layer.delta = layer.error * layer.apply_activation_derivative(output)
-            else:
-                next_layer = self._layers[i + 1]
-                layer.error = np.dot(next_layer.weights, next_layer.delta)
-                layer.delta = layer.error * layer.apply_activation_derivative(layer.last_activation)
-
-        # Update the weights
-        for i in range(len(self._layers)):
-            layer = self._layers[i]
-            # The input is either the previous layers output or X itself (for the first hidden layer)
-            input_to_use = np.atleast_2d(X if i == 0 else self._layers[i - 1].last_activation)
-            layer.weights += layer.delta * input_to_use.T * learning_rate
-
     def train(self, X, y, learning_rate, max_epochs):
         """
         Trains the neural network using backpropagation.
@@ -173,19 +177,20 @@ class NeuralNetwork:
         :return: The list of calculated MSE errors.
         """
 
-        mses = []
+        errors = []
 
         # sử dụng SGD
         for i in range(max_epochs):
             for j in range(len(X)):
                 self.backpropagation(X[j], y[j], learning_rate)
+
             # At every 10th epoch, we will print out the Mean Squared Error and save it in mses which we will return at the end.
             if i % 10 == 0:
                 mse = np.mean(np.square(y - nn.feed_forward(X)))
-                mses.append(mse)
+                errors.append(mse)
                 print('Epoch: #%s, MSE: %f' % (i, float(mse)))
 
-        return mses
+        return errors
 
     @staticmethod
     def accuracy(y_pred, y_true):

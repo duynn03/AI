@@ -19,9 +19,9 @@ scikit-image
 imutils
 
 # parse HTML
-bs4
-lxml
-requests
+#bs4
+#lxml
+#requests
 
 # Zernike Descriptor
 mahotas
@@ -29,3 +29,6 @@ mahotas
 #Other
 imageio
 IPython
+
+#tensorflow
+tensorflow

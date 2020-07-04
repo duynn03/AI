@@ -1,80 +1,54 @@
-import sys
+import numpy as np
 
-import cv2
 
-# get image path
-image_path = sys.path[0] + "\\image\\"
 
-# read image
+a = [[1.31415422e-01, -2.26093368e-01],
+     [-5.09640698e-01, -2.26093368e-01],
+     [5.07908699e-01, -2.26093368e-01],
+     [-7.43677059e-01, -1.55439190e+00],
+     [1.27107075e+00, 1.10220517e+00],
+     [-1.99450507e-02, 1.10220517e+00],
+     [-5.93588523e-01, -2.26093368e-01],
+     [-7.29685755e-01, -2.26093368e-01],
+     [-7.89466782e-01, -2.26093368e-01],
+     [-6.44465993e-01, -2.26093368e-01],
+     [-7.71822042e-02, 1.10220517e+00],
+     [-8.65999486e-04, -2.26093368e-01],
+     [-1.40779041e-01, -2.26093368e-01],
+     [3.15099326e+00, 2.43050370e+00],
+     [-9.31923697e-01, -2.26093368e-01],
+     [3.80715024e-01, 1.10220517e+00],
+     [-8.65782986e-01, -1.55439190e+00],
+     [-9.72625673e-01, -2.26093368e-01],
+     [7.73743478e-01, 1.10220517e+00],
+     [1.31050078e+00, 1.10220517e+00],
+     [-2.97227261e-01, -2.26093368e-01],
+     [-1.43322915e-01, -1.55439190e+00],
+     [-5.04552951e-01, -2.26093368e-01],
+     [-4.91995958e-02, 1.10220517e+00],
+     [2.40309445e+00, -2.26093368e-01],
+     [-1.14560907e+00, -2.26093368e-01],
+     [-6.90255715e-01, -2.26093368e-01],
+     [6.68172729e-01, -2.26093368e-01],
+     [2.53521350e-01, -2.26093368e-01],
+     [8.09357707e-01, -2.26093368e-01],
+     [-2.05647815e-01, -1.55439190e+00],
+     [-1.27280274e+00, -2.88269044e+00],
+     [5.00114703e-02, 1.10220517e+00],
+     [1.44532608e+00, -2.26093368e-01],
+     [-2.41262044e-01, 1.10220517e+00],
+     [-7.16966387e-01, -2.26093368e-01],
+     [-9.68809863e-01, -2.26093368e-01],
+     [1.67029651e-01, 1.10220517e+00],
+     [2.81647389e+00, 1.10220517e+00],
+     [2.05187753e-01, 1.10220517e+00],
+     [-4.28236746e-01, -1.55439190e+00],
+     [3.01854946e-01, -2.26093368e-01],
+     [7.20322135e-01, 1.10220517e+00],
+     [-1.01841540e+00, -2.26093368e-01],
+     [-1.46104938e+00, -1.55439190e+00],
+     [-1.89112638e-01, 1.10220517e+00],
+     [-1.01459959e+00, -2.26093368e-01]]
+X_train = np.asarray([1,3,4,5])
 
-logo_image = cv2.imread(image_path + 'logo.png', cv2.IMREAD_COLOR)
-
-# show logo
-window_name = 'Logo Image'
-cv2.imshow(window_name, logo_image)
-cv2.waitKey()
-
-# convert the logo to gray scale
-gray_logo = cv2.cvtColor(logo_image, cv2.COLOR_BGR2GRAY)
-
-# show gray logo
-window_name = 'Gray Logo'
-cv2.imshow(window_name, gray_logo)
-cv2.waitKey()
-
-# Threshold logo
-threshold_logo = cv2.threshold(gray_logo, 220, 255, cv2.THRESH_BINARY_INV)[1]
-
-# show Threshold logo
-window_name = 'Threshold Logo'
-cv2.imshow(window_name, threshold_logo)
-cv2.waitKey()
-
-# inverse Threshold Logo
-threshold_logo_inverse = cv2.bitwise_not(threshold_logo)
-
-# show Threshold Logo Inverse
-window_name = 'Threshold Logo Inverse'
-cv2.imshow(window_name, threshold_logo_inverse)
-cv2.waitKey()
-
-# original image
-original_image = cv2.imread(image_path + 'coin.jpg', cv2.IMREAD_COLOR)
-
-# show image
-window_name = 'Original Image'
-cv2.imshow(window_name, original_image)
-cv2.waitKey()
-
-# get space of original_image to place logo
-logo_rows, logo_cols, _ = logo_image.shape
-roi_image = original_image[0:logo_rows, 0:logo_cols]
-
-# show ROI image
-window_name = 'ROI Image'
-cv2.imshow(window_name, roi_image)
-cv2.waitKey()
-
-# delete space of logo in roi image (merge threshold_logo_inverse to roi_image)
-background_logo = cv2.bitwise_and(roi_image, roi_image, mask=threshold_logo_inverse)
-
-# show background logo
-window_name = 'Background logo '
-cv2.imshow(window_name, background_logo)
-cv2.waitKey()
-
-# get foreground logo
-foreground_logo = cv2.bitwise_and(logo_image, logo_image, mask=threshold_logo)
-
-# show image
-window_name = 'foreground logo'
-cv2.imshow(window_name, foreground_logo)
-cv2.waitKey()
-
-# add foreground logo to background logo
-output_logo_image = cv2.bitwise_or(background_logo, foreground_logo)
-
-# show image
-window_name = 'output logo'
-cv2.imshow(window_name, output_logo_image)
-cv2.waitKey()
+print(X_train.shape)
